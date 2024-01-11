@@ -9,7 +9,7 @@ type TPasswordRules =
     | "uppercase"
     | "lowercase"
     | "number"
-    | "special";
+    | "specialChar";
 
 interface IPasswordInputProps {
     name: string;
@@ -24,15 +24,17 @@ interface IPasswordRuleProps {
 }
 
 const PasswordRule = ({ isValid, children }: IPasswordRuleProps) => {
-    const labelValid = () => {
+    const validState = () => {
         return isValid ? "text-green-600" : "text-gray-400";
     };
 
+    const ValidStateIcon = isValid ? CheckIcon : CircleIcon;
+
     return (
         <li
-            className={`w-6/12 py-2 ${labelValid()} flex flex-row gap-2 items-center`}
+            className={`w-6/12 py-2 ${validState()} flex flex-row gap-2 items-center`}
         >
-            <CircleIcon />
+            <ValidStateIcon />
             {children}
         </li>
     );
@@ -48,17 +50,20 @@ export const PasswordInput = ({
     const [storedPassword, setStoredPassword] = useState("");
     const [isValidPassword, setIsValidPassword] = useState(false);
 
-    const validationRules = useMemo(
-        () => ({
-            hasUppercase: {
+    const validationRules = useMemo(() => {
+        const defaultRules: Record<
+            TPasswordRules,
+            { isValid: boolean; label: string }
+        > = {
+            uppercase: {
                 isValid: /[A-Z]/.test(storedPassword),
                 label: "1 uppercase character",
             },
-            hasLowercase: {
+            lowercase: {
                 isValid: /[a-z]/.test(storedPassword),
                 label: "1 lowercase character",
             },
-            hasNumber: {
+            number: {
                 isValid: /\d/.test(storedPassword),
                 label: "1 number",
             },
@@ -66,26 +71,30 @@ export const PasswordInput = ({
                 isValid: storedPassword.length >= passwordLength,
                 label: `min. ${passwordLength} characters `,
             },
-            hasSpecialChar: {
+            specialChar: {
                 isValid: /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
                     storedPassword
                 ),
                 label: "1 special character",
             },
-        }),
-        [passwordLength, storedPassword]
-    );
-    console.log({ validationRules });
+        };
 
-    // Enable rules
-    useEffect(() => {
-        if (rules.length === 0) {
-        }
-    }, [rules]);
+        const containerDefaultRules = Object.entries(defaultRules);
+
+        const enabledRules =
+            rules.length === 0
+                ? containerDefaultRules
+                : containerDefaultRules.filter((validationRule) =>
+                      rules.includes(validationRule[0] as TPasswordRules)
+                  );
+
+        return enabledRules;
+    }, [passwordLength, rules, storedPassword]);
 
     console.log({
         storedPassword,
-        validationRules: Object.entries(validationRules),
+        validationRules,
+        validationRulesEntries: Object.entries(validationRules),
     });
 
     return (
@@ -110,16 +119,14 @@ export const PasswordInput = ({
             />
             <section className="container pt-4">
                 <ul className="flex flex-row flex-wrap">
-                    {Object.entries(validationRules).map(
-                        ([ruleName, ruleConfig]) => (
-                            <PasswordRule
-                                key={ruleName}
-                                isValid={ruleConfig.isValid}
-                            >
-                                {ruleConfig.label}
-                            </PasswordRule>
-                        )
-                    )}
+                    {validationRules.map(([ruleName, ruleValue]) => (
+                        <PasswordRule
+                            key={ruleName}
+                            isValid={ruleValue.isValid}
+                        >
+                            {ruleValue.label}
+                        </PasswordRule>
+                    ))}
                 </ul>
             </section>
         </section>
