@@ -27,7 +27,6 @@ export default function Home() {
                             name="password"
                             label="Password"
                             passwordLength={8}
-                            rules={["lowercase"]}
                             isValidField={(valid: boolean) =>
                                 setFormIsValid(valid)
                             }
