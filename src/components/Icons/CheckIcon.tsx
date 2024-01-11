@@ -1,7 +1,10 @@
 import { SvgContainer } from "./Base";
+import type { TIconBase } from "./Base";
 
-export const CheckIcon = () => (
-    <SvgContainer color="text-red-500">
+interface ICheckIconProps extends TIconBase {}
+
+export const CheckIcon = ({ color }: ICheckIconProps) => (
+    <SvgContainer color={color}>
         <polyline points="20 6 9 17 4 12" />
     </SvgContainer>
 );

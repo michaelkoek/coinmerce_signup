@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/button";
 import { Input } from "@/components/formElements/input";
 import { PasswordInput } from "@/components/formElements/passwordInput";
 

@@ -2,21 +2,23 @@ import type { ReactNode } from "react";
 
 interface ISvgContainerProps {
     children: ReactNode;
-    color: string;
+    color?: string;
     w?: number;
     h?: number;
     fill?: "none" | "currentColor";
 }
 
+export type TIconBase = Omit<ISvgContainerProps, "children">;
+
 export const SvgContainer = ({
     children,
-    color,
+    color = "text-gray-400",
     w = 12,
     h = 12,
     fill = "none",
 }: ISvgContainerProps) => (
     <svg
-        className={`h-6 w-6 ${color}`}
+        className={`h-${w} w-${w} ${color}`}
         width={w}
         height={h}
         fill={fill}

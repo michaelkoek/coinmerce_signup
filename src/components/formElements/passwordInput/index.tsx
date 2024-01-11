@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Input } from "./input";
-import { CircleIcon, CloseIcon, CheckIcon } from "../Icons";
+import { Input } from "../input";
+import { CircleIcon, CloseIcon, CheckIcon } from "../../Icons";
 
 type TPasswordRules =
     | "minLength"
@@ -23,31 +23,15 @@ interface IPasswordRuleProps {
     isValid?: boolean;
 }
 
-const Cross = () => (
-    <svg
-        className="h-6 w-6 text-red-500"
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        fill="none"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-    >
-        <path stroke="none" d="M0 0h24v24H0z" />{" "}
-        <line x1="18" y1="6" x2="6" y2="18" />{" "}
-        <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-);
-
 const PasswordRule = ({ isValid, children }: IPasswordRuleProps) => {
     const labelValid = () => {
         return isValid ? "text-green-600" : "text-gray-400";
     };
 
     return (
-        <li className={`w-6/12 py-2 ${labelValid()}`}>
+        <li
+            className={`w-6/12 py-2 ${labelValid()} flex flex-row gap-2 items-center`}
+        >
             <CircleIcon />
             {children}
         </li>
