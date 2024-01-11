@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Input } from "../input";
 import { CircleIcon, CloseIcon, CheckIcon } from "../../Icons";
@@ -16,6 +16,7 @@ interface IPasswordInputProps {
     label: string;
     rules?: TPasswordRules[];
     passwordLength?: number;
+    isValidField?: (valid: boolean) => void;
 }
 
 interface IPasswordRuleProps {
@@ -24,15 +25,13 @@ interface IPasswordRuleProps {
 }
 
 const PasswordRule = ({ isValid, children }: IPasswordRuleProps) => {
-    const validState = () => {
-        return isValid ? "text-green-600" : "text-gray-400";
-    };
-
     const ValidStateIcon = isValid ? CheckIcon : CircleIcon;
 
     return (
         <li
-            className={`w-6/12 py-2 ${validState()} flex flex-row gap-2 items-center`}
+            className={`w-6/12 py-2 ${
+                isValid ? "text-green-600" : "text-gray-400"
+            } flex flex-row gap-2 items-center`}
         >
             <ValidStateIcon />
             {children}
@@ -45,6 +44,7 @@ export const PasswordInput = ({
     label,
     rules = [],
     passwordLength = 6,
+    isValidField,
 }: IPasswordInputProps) => {
     const [toggleDisplayPassword, setToggleDisplayPassword] = useState(false);
     const [storedPassword, setStoredPassword] = useState("");
@@ -88,14 +88,14 @@ export const PasswordInput = ({
                       rules.includes(validationRule[0] as TPasswordRules)
                   );
 
-        return enabledRules;
-    }, [passwordLength, rules, storedPassword]);
+        if (isValidField) {
+            isValidField(
+                enabledRules.every((enabledRule) => enabledRule[1].isValid)
+            );
+        }
 
-    console.log({
-        storedPassword,
-        validationRules,
-        validationRulesEntries: Object.entries(validationRules),
-    });
+        return enabledRules;
+    }, [isValidField, passwordLength, rules, storedPassword]);
 
     return (
         <section>

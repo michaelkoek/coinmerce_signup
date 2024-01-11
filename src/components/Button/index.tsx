@@ -17,7 +17,7 @@ export const Button = ({
 }: IButton) => {
     return (
         <button
-            className="text-white font-bold w-full py-4 px-8 rounded-3xl bg-sky-500 hover:bg-sky-600 active:bg-gray-950 disabled:bg-gray-400"
+            className="text-white font-bold w-full py-4 px-8 rounded-3xl bg-sky-500 hover:bg-sky-600 active:bg-gray-950 disabled:bg-gray-400 disabled:cursor-not-allowed"
             type={type}
             onClick={onClick}
             disabled={isDisabled}
